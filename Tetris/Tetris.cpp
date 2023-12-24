@@ -2,6 +2,7 @@
 
 #include <time.h>
 #include <stdlib.h>
+#include <conio.h>
 
 const int SPEED_NORMAL = 500; //ms
 const int SPEED_QUICK = 50; //ms
@@ -35,10 +36,10 @@ void Tetris::init()
 	srand((unsigned int)time(NULL));
 
 	// 创建游戏窗口
-	initgraph(938, 896);
+	initgraph(938 * 0.8, 896 * 0.8);
 
 	// 加载背景图片
-	loadimage(&imgBg, "res/bg2.png");
+	loadimage(&imgBg, "res/bg3.png");
 
 	// 初始化游戏区中的数据  ************************************
 	//char data[20][10];
@@ -97,7 +98,67 @@ void Tetris::play()
 
 void Tetris::keyEvent()
 {
+	unsigned char ch;
+	bool rotateFlag = false;
+	int dx = 0;
 
+	if (_kbhit())
+	{
+		ch = _getch();
+
+		// 如果按下 向上方向键, 会先后返回: 224, 72
+		// 如果按下 向下方向键, 会先后返回: 224, 80
+		// 如果按下 向左方向键, 会先后返回: 224, 75
+		// 如果按下 向右方向键, 会先后返回: 224, 77
+		if (ch == 224)
+		{
+			ch = _getch();
+			switch (ch)
+			{
+			case 72:
+				rotateFlag = true;
+				break;
+			case 80:
+				delay = SPEED_QUICK;
+				break;
+			case 75:
+				dx = -1;
+				break;
+			case 77:
+				dx = 1;
+				break;
+			default:
+				break;
+			}
+		}
+		else if (ch == 'w' || ch == 'W')
+		{
+			rotateFlag = true;
+		}
+		else if (ch == 'd' || ch == 'D')
+		{
+			dx = 1;
+		}
+		else if (ch == 's' || ch == 'S')
+		{
+			delay = SPEED_QUICK;
+		}
+		else if (ch == 'a' || ch == 'A')
+		{
+			dx = -1;
+		}
+	}
+
+	if (rotateFlag)
+	{
+
+	}
+
+	if (dx != 0)
+	{
+		moveLeftRight(dx);
+		update = true;
+	}
 }
 
 void Tetris::updateWindow()
@@ -146,7 +207,7 @@ void Tetris::updateWindow()
 	//block.draw(leftMargin, topMargin);
 
 	curBlock->draw(leftMargin, topMargin);
-	nextBlock->draw(689, 150);
+	nextBlock->draw(689 * 0.8, 150 * 0.8);
 
 	EndBatchDraw();
 }
@@ -183,8 +244,21 @@ void Tetris::drop()
 		curBlock = nextBlock;
 		nextBlock = new Block;
 	}
+
+	delay = SPEED_NORMAL;
 }
 
 void Tetris::clearLine()
 {
+}
+
+void Tetris::moveLeftRight(int offset)
+{
+	bakBlock = *curBlock;
+	curBlock->moveLeftRight(offset);
+
+	if (!curBlock->blockInMap(map))
+	{
+		*curBlock = bakBlock;
+	}
 }

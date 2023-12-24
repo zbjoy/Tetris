@@ -2,14 +2,14 @@
 #include <stdlib.h>
 
 IMAGE* Block::imgs[7] = { NULL };
-int Block::size = 36;
+int Block::size = 36 * 0.8;
 
 Block::Block()
 {
 	if (imgs[0] == NULL)
 	{
 		IMAGE imgTmp;
-		loadimage(&imgTmp, "res/tiles.png");
+		loadimage(&imgTmp, "res/tiles1.png");
 
 		SetWorkingImage(&imgTmp);
 		for (int i = 0; i < 7; i++)
@@ -59,6 +59,10 @@ void Block::drop()
 
 void Block::moveLeftRight(int offset)
 {
+	for (int i = 0; i < 4; i++)
+	{
+		smallBlocks[i].col += offset;
+	}
 }
 
 void Block::retate()
