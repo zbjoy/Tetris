@@ -15,13 +15,14 @@ public:
 	Block();
 	void drop();
 	void moveLeftRight(int offset);
-	void retate(); //Ðý×ª
+	void rotate(); //Ðý×ª
 	void draw(int leftMargin, int topMargin); 
 	static IMAGE** getImage();
 	//Point* getSmallBlocks();
 
 	bool blockInMap(const std::vector<std::vector<int>>& map);
 	void solidify(std::vector<std::vector<int>>& map);
+	int getBlockType();
 
 	Block& operator=(const Block& other);
 

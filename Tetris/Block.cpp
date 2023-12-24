@@ -65,8 +65,16 @@ void Block::moveLeftRight(int offset)
 	}
 }
 
-void Block::retate()
+void Block::rotate()
 {
+	Point p = smallBlocks[1];
+
+	for (int i = 0; i < 4; i++)
+	{
+		Point temp = smallBlocks[i];
+		smallBlocks[i].col = p.col - temp.row + p.row;
+		smallBlocks[i].row = p.row + temp.col - p.col;
+	}
 }
 
 void Block::draw(int leftMargin, int topMargin)
@@ -110,6 +118,11 @@ void Block::solidify(std::vector<std::vector<int>>& map)
 		// 设置标记, "固化"位置
 		map[smallBlocks[i].row][smallBlocks[i].col] = blockType;
 	}
+}
+
+int Block::getBlockType()
+{
+	return blockType;
 }
 
 Block& Block::operator=(const Block& other)
